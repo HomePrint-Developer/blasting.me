@@ -26,6 +26,9 @@ Tidak ada lagi eror notifikasi melayang yang tersembunyi. Jika terdapat kesalaha
 - Mendeteksi nomor yang kurang dari 11 digit.
 - Memberitahu secara visual **nomor mana saja** di dalam tumpukan *textarea* yang tidak valid agar pengguna dapat langsung memperbaikinya.
 
+### ⚠️ Proteksi Keamanan (Spam Disclaimer & Session Memory)
+Menampilkan peringatan risiko *spam* dan pernyataan lepas tanggung jawab (*disclaimer*) mengenai risiko pemblokiran nomor oleh WhatsApp sebelum sesi *blasting* pertama dimulai. Dilengkapi dengan **sistem memori sesi (Flagging)**, sehingga *pop-up* persetujuan ini hanya akan muncul **satu kali** di awal sesi agar tidak mengganggu kenyamanan pengguna saat mengklik tombol "Kirim Berikutnya".
+
 ### 🌍 Koreksi Kode Negara Otomatis
 Logika pintar yang secara otomatis mendeteksi jika nomor diawali dengan angka `0` atau tanpa kode negara, dan langsung menormalisasinya menjadi format standar internasional Indonesia (`62`) agar API WhatsApp terbuka dengan sempurna.
 
