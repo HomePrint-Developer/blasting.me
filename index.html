@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>blasting.me - Dashboard</title>
 
-    <!-- Font Figtree (Bawaan UI Laravel 10/11/12) -->
+    <!-- Font Figtree -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
 
@@ -53,34 +53,34 @@
 </head>
 
 <body
-    class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden">
+    class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden">
 
     <!-- Header / Tipografi Logo -->
     <div class="mb-6 text-center">
-        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">blasting.me</h1>
+        <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">blasting.me</h1>
     </div>
 
     <!-- Card Container -->
-    <div class="w-full max-w-md px-8 py-8 bg-white border border-gray-100 shadow-sm rounded-2xl">
+    <div class="w-full max-w-md px-8 py-8 bg-white border border-slate-200 shadow-sm rounded-xl">
 
         <form id="waForm" class="space-y-6">
 
             <!-- Input Pesan -->
             <div>
-                <label for="message" class="block font-medium text-sm text-gray-700">Pesan Broadcast</label>
+                <label for="message" class="block font-medium text-sm text-slate-700">Pesan Broadcast</label>
                 <textarea id="message" name="message" rows="4" required
                     placeholder="Tuliskan pesan yang ingin dikirim..."
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring focus:ring-red-500 focus:ring-opacity-50 transition border p-3 outline-none text-sm"></textarea>
+                    class="mt-1 block w-full border-slate-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 transition border p-3 outline-none text-sm"></textarea>
             </div>
 
             <!-- Input Nomor Handphone -->
             <div>
                 <div class="flex justify-between items-center mb-1">
-                    <label for="phone" class="block font-medium text-sm text-gray-700">Nomor Target (Massal)</label>
+                    <label for="phone" class="block font-medium text-sm text-slate-700">Nomor Target (Massal)</label>
 
                     <!-- Tombol Kontak HP -->
                     <button type="button" id="btnContactPicker"
-                        class="hidden text-xs font-semibold text-red-600 hover:text-red-800 flex items-center gap-1 transition">
+                        class="hidden text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -92,14 +92,14 @@
 
                 <textarea id="phone" name="phone" rows="5" required
                     placeholder="085754207467&#10;081234567890&#10;(Pisahkan dengan Enter)"
-                    class="block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring focus:ring-red-500 focus:ring-opacity-50 transition border p-3 outline-none text-sm font-mono"></textarea>
-                <p class="mt-2 text-xs text-gray-500">Gunakan format angka. Setiap nomor diletakkan di baris baru.</p>
+                    class="block w-full border-slate-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 transition border p-3 outline-none text-sm font-mono"></textarea>
+                <p class="mt-2 text-xs text-slate-500">Gunakan format angka. Setiap nomor diletakkan di baris baru.</p>
             </div>
 
             <!-- Action Button -->
             <div class="flex items-center justify-end mt-4">
                 <button type="submit" id="submitBtn"
-                    class="inline-flex items-center px-6 py-3 bg-gray-800 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 w-full justify-center">
+                    class="inline-flex items-center px-6 py-3 bg-indigo-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 w-full justify-center shadow-sm">
                     Kirim Pesan
                 </button>
             </div>
@@ -164,8 +164,8 @@
                     text: 'Silakan masukkan minimal satu nomor handphone target.',
                     confirmButtonText: 'Mengerti',
                     customClass: {
-                        popup: 'rounded-2xl shadow-xl border border-gray-100',
-                        confirmButton: 'w-full mt-4 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg px-6 py-3 transition tracking-widest uppercase text-xs'
+                        popup: 'rounded-xl shadow-xl border border-slate-200',
+                        confirmButton: 'w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg px-6 py-3 transition tracking-widest uppercase text-xs'
                     },
                     buttonsStyling: false
                 });
@@ -194,8 +194,8 @@
             // Pop-up Eror (Jika format nomor ada yang salah)
             if (invalidNumbers.length > 0) {
                 let errorListHtml = invalidNumbers.map(err =>
-                    `<li class="text-left text-sm text-red-700 bg-red-50 p-2.5 rounded-lg border border-red-100 flex items-center gap-2">
-                        <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    `<li class="text-left text-sm text-rose-700 bg-rose-50 p-2.5 rounded-lg border border-rose-100 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         <span>${err}</span>
                     </li>`
                 ).join('');
@@ -204,7 +204,7 @@
                     icon: 'error',
                     title: 'Format Tidak Valid',
                     html: `
-                        <div class="mt-2 text-sm text-gray-600 mb-4 text-left">
+                        <div class="mt-2 text-sm text-slate-600 mb-4 text-left">
                             Terdapat nomor yang tidak sesuai ketentuan (harus murni angka & minimal 11 digit):
                         </div>
                         <ul class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
@@ -213,9 +213,9 @@
                     `,
                     confirmButtonText: 'Perbaiki',
                     customClass: {
-                        popup: 'rounded-2xl shadow-xl border border-gray-100 p-6',
-                        title: 'text-gray-900 font-bold text-xl',
-                        confirmButton: 'w-full mt-4 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg px-6 py-3 transition tracking-widest uppercase text-xs'
+                        popup: 'rounded-xl shadow-xl border border-slate-200 p-6',
+                        title: 'text-slate-800 font-bold text-xl',
+                        confirmButton: 'w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg px-6 py-3 transition tracking-widest uppercase text-xs'
                     },
                     buttonsStyling: false
                 });
@@ -231,14 +231,16 @@
                 const submitBtn = document.getElementById('submitBtn');
                 if (validNumbers.length > 0) {
                     submitBtn.innerText = `Kirim Berikutnya (${validNumbers.length} Antrean)`;
-                    submitBtn.classList.replace('bg-gray-800', 'bg-amber-600');
-                    submitBtn.classList.replace('hover:bg-gray-700', 'hover:bg-amber-500');
-                    submitBtn.classList.replace('active:bg-gray-900', 'active:bg-amber-700');
+                    submitBtn.classList.replace('bg-indigo-600', 'bg-rose-600');
+                    submitBtn.classList.replace('hover:bg-indigo-700', 'hover:bg-rose-500');
+                    submitBtn.classList.replace('active:bg-indigo-900', 'active:bg-rose-700');
+                    submitBtn.classList.replace('focus:ring-indigo-500', 'focus:ring-rose-500');
                 } else {
                     submitBtn.innerText = 'Kirim Pesan';
-                    submitBtn.classList.replace('bg-amber-600', 'bg-gray-800');
-                    submitBtn.classList.replace('hover:bg-amber-500', 'hover:bg-gray-700');
-                    submitBtn.classList.replace('active:bg-amber-700', 'active:bg-gray-900');
+                    submitBtn.classList.replace('bg-rose-600', 'bg-indigo-600');
+                    submitBtn.classList.replace('hover:bg-rose-500', 'hover:bg-indigo-700');
+                    submitBtn.classList.replace('active:bg-rose-700', 'active:bg-indigo-900');
+                    submitBtn.classList.replace('focus:ring-rose-500', 'focus:ring-indigo-500');
                 }
 
                 if (currentNumber.startsWith('62') === false) {
@@ -260,7 +262,7 @@
                     icon: 'warning',
                     title: 'Peringatan Risiko Spam',
                     html: `
-                        <div class="mt-2 text-sm text-gray-600 text-left">
+                        <div class="mt-2 text-sm text-slate-600 text-left">
                             Mengirim pesan massal (blasting) memiliki risiko terdeteksi sebagai spam oleh pihak WhatsApp.<br><br>
                             Situs <b>blasting.me</b> tidak bertanggung jawab atas pemblokiran (banned) atau sanksi apapun yang terjadi pada nomor yang digunakan untuk mengirim pesan.
                         </div>
@@ -269,11 +271,11 @@
                     confirmButtonText: 'Mengerti',
                     cancelButtonText: 'Batal',
                     customClass: {
-                        popup: 'rounded-2xl shadow-xl border border-gray-100 p-6',
-                        title: 'text-gray-900 font-bold text-xl',
+                        popup: 'rounded-xl shadow-xl border border-slate-200 p-6',
+                        title: 'text-slate-800 font-bold text-xl',
                         actions: 'w-full !flex !flex-row gap-3 mt-4',
-                        confirmButton: 'flex-1 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg px-4 py-3 transition tracking-widest uppercase text-xs !m-0',
-                        cancelButton: 'flex-1 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 font-semibold rounded-lg px-4 py-3 transition uppercase text-xs !m-0'
+                        confirmButton: 'flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg px-4 py-3 transition tracking-widest uppercase text-xs !m-0',
+                        cancelButton: 'flex-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold rounded-lg px-4 py-3 transition uppercase text-xs !m-0'
                     },
                     buttonsStyling: false
                 }).then((result) => {

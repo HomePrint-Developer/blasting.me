@@ -2,7 +2,7 @@
 
 🌐 **Live Demo:** [https://homeprint-developer.github.io/blasting.me/](https://homeprint-developer.github.io/blasting.me/)
 
-**blasting.me** adalah aplikasi web statis *single-page* yang dirancang untuk memfasilitasi pengiriman pesan WhatsApp massal (*Broadcast*) secara dinamis. Mengusung gaya antarmuka bersih dan minimalis ala **Laravel 12 Basic**, alat ini memecahkan masalah pemblokiran *pop-up browser* saat mengirim banyak pesan sekaligus dengan menerapkan sistem antrean manual (Queue System) yang aman dan terkendali.
+**blasting.me** adalah aplikasi web statis *single-page* yang dirancang untuk memfasilitasi pengiriman pesan WhatsApp massal (*Broadcast*) secara dinamis. Mengusung gaya antarmuka bersih dan minimalis ala **anggaran.me**, alat ini memecahkan masalah pemblokiran *pop-up browser* saat mengirim banyak pesan sekaligus dengan menerapkan sistem antrean manual (Queue System) yang aman dan terkendali.
 
 ---
 
@@ -14,11 +14,11 @@ Mendukung interaksi langsung dengan buku telepon (Phonebook) bawaan perangkat. P
 ### 🚀 Sistem Antrean Cerdas (Queue Array System)
 Menggunakan pendekatan metode *Pop & Shift Array* pada JavaScript, pengguna dapat menempelkan (*copy-paste*) puluhan nomor sekaligus. Sistem akan menahan nomor dalam antrean (*textarea*) dan memproses pengiriman satu per satu setiap kali tombol diklik.
 
-### 🎨 Desain UI/UX ala Laravel 12
-Antarmuka dirancang menyerupai *starter kit* modern Laravel (Breeze/Jetstream):
+### 🎨 Desain UI/UX ala anggaran.me
+Antarmuka dirancang menyerupai gaya *anggaran.me*:
 - Menggunakan tipografi bawaan Laravel, yaitu font **Figtree**.
-- Gaya *Card* yang sangat *clean* dengan *border-radius* mulus (`rounded-2xl`) dan *shadow* minimal.
-- Tombol dinamis (*Dynamic Button*) yang akan berubah warna (dari *Dark Gray* ke *Amber/Warning*) dan menampilkan sisa jumlah antrean ketika proses *blasting* sedang berjalan.
+- Gaya *Card* yang sangat *clean* dengan *border-radius* mulus (`rounded-xl`) dan *shadow* minimal.
+- Tombol dinamis (*Dynamic Button*) yang akan berubah warna (dari *Indigo* ke *Rose/Warning*) dan menampilkan sisa jumlah antrean ketika proses *blasting* sedang berjalan.
 
 ### 🛡️ Validasi Ketat & Penanganan Eror Visual (SweetAlert2)
 Tidak ada lagi eror notifikasi melayang yang tersembunyi. Jika terdapat kesalahan input, sistem akan menampilkan *pop-up modal* besar di tengah layar yang berisi rincian spesifik:
@@ -59,4 +59,15 @@ Karena ini adalah aplikasi web statis murni tanpa *database*, Anda dapat langsun
 
 1. **Klon Repositori**
    ```bash
-   git clone [https://github.com/homeprint-developer/blasting.me.git](https://github.com/homeprint-developer/blasting.me.git)
+   git clone https://github.com/homeprint-developer/blasting.me.git
+   ```
+
+2. **Jalankan Proyek**
+   Buka folder hasil kloning, lalu klik dua kali pada file `index.html` untuk menjalankannya langsung di peramban (Chrome, Firefox, Safari, Edge).
+
+3. **Cara Penggunaan**
+   - Tulis teks *broadcast* di kolom pesan.
+   - Tempel (*paste*) kumpulan nomor target pada kolom Nomor Handphone, atau klik **Ambil dari Kontak** (jika menggunakan *smartphone*).
+   - Klik **"Kirim Pesan"**. Anda akan diminta menyetujui disclaimer peringatan spam.
+   - Tab WhatsApp akan otomatis terbuka.
+   - Kembali ke tab *blasting.me*, lalu klik tombol **"Kirim Berikutnya"** untuk memproses nomor antrean selanjutnya. Lakukan langkah ini hingga antrean habis.
