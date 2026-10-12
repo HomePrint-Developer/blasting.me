@@ -16,7 +16,7 @@
     <!-- SweetAlert2 untuk Pop-up Eror -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Kustomisasi font dan scrollbar (Gaya Laravel) -->
+    <!-- Kustomisasi font dan scrollbar -->
     <script>
         tailwind.config = {
             theme: {
@@ -29,33 +29,26 @@
         }
     </script>
     <style>
-        /* Custom Scrollbar kaku dan minimalis di dalam pop-up eror */
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
         }
-
         .custom-scrollbar::-webkit-scrollbar-track {
             background: transparent;
         }
-
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 4px;
         }
-
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-
-        /* Memastikan font SweetAlert mengikuti Figtree */
         .swal2-popup {
             font-family: 'Figtree', sans-serif !important;
         }
     </style>
 </head>
 
-<body
-    class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden">
+<body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden">
 
     <!-- Header / Tipografi Logo -->
     <div class="mb-6 text-center">
@@ -77,10 +70,21 @@
 
             <!-- Input Nomor Handphone -->
             <div>
-                <label for="phone" class="block font-medium text-sm text-gray-700">Nomor Target (Massal)</label>
+                <div class="flex justify-between items-center mb-1">
+                    <label for="phone" class="block font-medium text-sm text-gray-700">Nomor Target (Massal)</label>
+                    
+                    <!-- Tombol Kontak HP (Disembunyikan secara default) -->
+                    <button type="button" id="btnContactPicker" class="hidden text-xs font-semibold text-red-600 hover:text-red-800 flex items-center gap-1 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        Ambil dari Kontak
+                    </button>
+                </div>
+
                 <textarea id="phone" name="phone" rows="5" required
                     placeholder="085754207467&#10;081234567890&#10;(Pisahkan dengan Enter)"
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring focus:ring-red-500 focus:ring-opacity-50 transition border p-3 outline-none text-sm font-mono"></textarea>
+                    class="block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring focus:ring-red-500 focus:ring-opacity-50 transition border p-3 outline-none text-sm font-mono"></textarea>
                 <p class="mt-2 text-xs text-gray-500">Gunakan format angka. Setiap nomor diletakkan di baris baru.</p>
             </div>
 
@@ -96,13 +100,65 @@
     </div>
 
     <script>
+        // ==========================================
+        // FITUR CONTACT PICKER API
+        // ==========================================
+        const btnContact = document.getElementById('btnContactPicker');
+        const phoneTextarea = document.getElementById('phone');
+
+        // Cek apakah browser HP mendukung fitur ambil kontak
+        if ('contacts' in navigator && 'ContactsManager' in window) {
+            btnContact.classList.remove('hidden'); // Munculkan tombol
+            
+            btnContact.addEventListener('click', async () => {
+                try {
+                    // Minta izin baca nomor telepon (tel), bisa multiple (banyak sekaligus)
+                    const contacts = await navigator.contacts.select(['tel'], { multiple: true });
+                    
+                    if (contacts.length > 0) {
+                        let extractedNumbers = [];
+                        
+                        // Ekstrak semua nomor telepon yang dipilih dari kontak
+                        contacts.forEach(contact => {
+                            if (contact.tel && contact.tel.length > 0) {
+                                // Ambil nomor pertama dari kontak tersebut, bersihkan dari spasi/karakter
+                                let cleanNum = contact.tel[0].replace(/[^0-9+]/g, '');
+                                
+                                // Jika format depannya +62, ubah jadi 0 agar seragam (atau biarkan, logika blasting kita sudah menyesuaikan)
+                                if (cleanNum.startsWith('+62')) {
+                                    cleanNum = '0' + cleanNum.substring(3);
+                                }
+                                
+                                extractedNumbers.push(cleanNum);
+                            }
+                        });
+
+                        // Gabungkan ke textarea tanpa menghapus nomor yang sudah ada di sana
+                        let existingText = phoneTextarea.value.trim();
+                        let newText = extractedNumbers.join('\n');
+                        
+                        if (existingText === '') {
+                            phoneTextarea.value = newText;
+                        } else {
+                            phoneTextarea.value = existingText + '\n' + newText;
+                        }
+                    }
+                } catch (error) {
+                    console.log('Pengguna membatalkan pilihan kontak atau terjadi eror:', error);
+                }
+            });
+        }
+
+        // ==========================================
+        // LOGIKA SUBMIT DAN BLASTING
+        // ==========================================
         document.getElementById('waForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            let phoneInput = document.getElementById('phone').value;
+            let phoneInput = phoneTextarea.value;
             let message = document.getElementById('message').value;
 
-            // Pisahkan input berdasarkan baris baru (enter) atau koma, bersihkan spasi depan/belakang
+            // Pisahkan input berdasarkan baris baru atau koma, bersihkan spasi
             let rawNumbers = phoneInput.split(/[\n,]+/).map(num => num.trim()).filter(num => num !== '');
 
             // Validasi Input Kosong
@@ -126,33 +182,30 @@
 
             // Pengecekan setiap nomor
             rawNumbers.forEach(num => {
-                // Hapus spasi di dalam nomor jika user mengetik seperti "0812 3456 7890"
                 let cleanNum = num.replace(/\s+/g, '');
+                // Jika diawali +62, bersihkan tanda +
+                if (cleanNum.startsWith('+')) cleanNum = cleanNum.substring(1);
 
-                // Cek apakah ada karakter selain angka (huruf, simbol, dll)
                 if (!/^[0-9]+$/.test(cleanNum)) {
                     invalidNumbers.push(`<b>${cleanNum}</b> <span class="text-xs ml-1">(Bukan angka)</span>`);
-                }
-                // Cek panjang minimal 11 digit
+                } 
                 else if (cleanNum.length < 11) {
                     invalidNumbers.push(`<b>${cleanNum}</b> <span class="text-xs ml-1">(Kurang dari 11 digit)</span>`);
-                }
-                // Jika lolos validasi, masukkan ke daftar aman
+                } 
                 else {
                     validNumbers.push(cleanNum);
                 }
             });
 
-            // Jika ada Eror pada nomor yang dimasukkan (Pop-up Laravel 12 Style)
+            // Pop-up Eror
             if (invalidNumbers.length > 0) {
-                // Format list HTML untuk menampilkan eror spesifik
-                let errorListHtml = invalidNumbers.map(err =>
+                let errorListHtml = invalidNumbers.map(err => 
                     `<li class="text-left text-sm text-red-700 bg-red-50 p-2.5 rounded-lg border border-red-100 flex items-center gap-2">
                         <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         <span>${err}</span>
                     </li>`
                 ).join('');
-
+                
                 Swal.fire({
                     icon: 'error',
                     title: 'Format Tidak Valid',
@@ -175,42 +228,41 @@
                     },
                     buttonsStyling: false
                 });
-
-                return; // Berhenti di sini, jangan jalankan proses pembukaan WhatsApp
+                
+                return; 
             }
 
-            // ==========================================
-            // PROSES PENGIRIMAN (JIKA SEMUA VALID)
-            // ==========================================
-
-            // Ambil nomor urutan pertama dari array yang sudah valid
+            // Ambil nomor pertama
             let currentNumber = validNumbers.shift();
 
-            // Kembalikan sisa antrean ke textarea
-            document.getElementById('phone').value = validNumbers.join('\n');
+            // Kembalikan antrean ke textarea
+            phoneTextarea.value = validNumbers.join('\n');
 
-            // Ubah gaya tombol ala Laravel jika masih ada antrean
+            // Ubah tombol
             const submitBtn = document.getElementById('submitBtn');
             if (validNumbers.length > 0) {
                 submitBtn.innerText = `Kirim Berikutnya (${validNumbers.length} Antrean)`;
-                // Ubah ke warna Amber (Warning)
                 submitBtn.classList.replace('bg-gray-800', 'bg-amber-600');
                 submitBtn.classList.replace('hover:bg-gray-700', 'hover:bg-amber-500');
                 submitBtn.classList.replace('active:bg-gray-900', 'active:bg-amber-700');
             } else {
                 submitBtn.innerText = 'Kirim Pesan';
-                // Kembali ke warna dasar hitam Laravel
                 submitBtn.classList.replace('bg-amber-600', 'bg-gray-800');
                 submitBtn.classList.replace('hover:bg-amber-500', 'hover:bg-gray-700');
                 submitBtn.classList.replace('active:bg-amber-700', 'active:bg-gray-900');
             }
 
-            // Penyesuaian format nomor ID ke kode negara
-            if (currentNumber.startsWith('0')) {
-                currentNumber = '62' + currentNumber.substring(1);
+            // Normalisasi +62 atau awalan 0
+            if (currentNumber.startsWith('62') === false) {
+                if (currentNumber.startsWith('0')) {
+                    currentNumber = '62' + currentNumber.substring(1);
+                } else if (!currentNumber.startsWith('62')) {
+                    // Jika diketik tanpa 0 dan tanpa 62 (misal langsung 812xxx)
+                    currentNumber = '62' + currentNumber;
+                }
             }
 
-            // Buka API WhatsApp
+            // Buka WhatsApp
             let encodedMessage = encodeURIComponent(message);
             let waUrl = `https://wa.me/${currentNumber}?text=${encodedMessage}`;
             window.open(waUrl, '_blank');
