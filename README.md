@@ -8,6 +8,9 @@
 
 ## Fitur Utama
 
+### 📱 Integrasi Buku Kontak (Contact Picker API)
+Mendukung interaksi langsung dengan buku telepon (Phonebook) bawaan perangkat. Pengguna *mobile* dapat langsung menekan tombol **"Ambil dari Kontak"** untuk memilih puluhan nomor secara bersamaan *(Multi-Select)*. Sistem akan mengekstrak nomor tersebut, membersihkan formatnya (menghapus spasi dan simbol), dan menambahkannya secara otomatis ke dalam antrean tanpa menimpa nomor yang sudah ada. *(Catatan: Fitur ini otomatis hanya muncul pada browser mobile yang mendukung dan berada di protokol HTTPS).*
+
 ### 🚀 Sistem Antrean Cerdas (Queue Array System)
 Menggunakan pendekatan metode *Pop & Shift Array* pada JavaScript, pengguna dapat menempelkan (*copy-paste*) puluhan nomor sekaligus. Sistem akan menahan nomor dalam antrean (*textarea*) dan memproses pengiriman satu per satu setiap kali tombol diklik.
 
@@ -24,7 +27,7 @@ Tidak ada lagi eror notifikasi melayang yang tersembunyi. Jika terdapat kesalaha
 - Memberitahu secara visual **nomor mana saja** di dalam tumpukan *textarea* yang tidak valid agar pengguna dapat langsung memperbaikinya.
 
 ### 🌍 Koreksi Kode Negara Otomatis
-Logika pintar yang secara otomatis mendeteksi jika nomor diawali dengan angka `0`, dan otomatis mengubahnya menjadi format standar internasional Indonesia (`62`) agar API WhatsApp terbuka dengan sempurna.
+Logika pintar yang secara otomatis mendeteksi jika nomor diawali dengan angka `0` atau tanpa kode negara, dan langsung menormalisasinya menjadi format standar internasional Indonesia (`62`) agar API WhatsApp terbuka dengan sempurna.
 
 ---
 
@@ -35,6 +38,7 @@ Proyek ini tidak memerlukan *backend*, dibangun sepenuhnya dengan teknologi sisi
 - **Styling**: Tailwind CSS (via CDN) dengan kustomisasi konfigurasi *theme* bawaan.
 - **Font**: Figtree (Google Fonts / Bunny Fonts).
 - **Pop-up Interaktif**: SweetAlert2.
+- **Native Device Access**: Web Contact Picker API (`navigator.contacts`).
 - **Gateway Komunikasi**: WhatsApp API resmi (`wa.me`).
 
 ---
@@ -42,7 +46,7 @@ Proyek ini tidak memerlukan *backend*, dibangun sepenuhnya dengan teknologi sisi
 ## Struktur File Proyek
 
 Proyek ini dibuat seringkas mungkin untuk performa maksimal.
-- `index.html` — Berisi seluruh antarmuka (UI), penataan gaya (Tailwind), integrasi SweetAlert2, dan logika JavaScript pengirim pesan (*Single Page Application*).
+- `index.html` — Berisi seluruh antarmuka (UI), penataan gaya (Tailwind), integrasi SweetAlert2, deteksi dukungan perangkat, dan logika JavaScript pengirim pesan (*Single Page Application*).
 
 ---
 
