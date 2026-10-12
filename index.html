@@ -4,292 +4,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notepad Firebase</title>
+    <title>blasting.me - Dashboard</title>
+
+    <!-- Font Figtree (Bawaan UI Laravel 10/11/12) -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tambahan FontAwesome untuk Icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- SweetAlert2 untuk Pop-up Eror -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Kustomisasi font dan scrollbar (Gaya Laravel) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Figtree', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar kaku dan minimalis di dalam pop-up eror */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Memastikan font SweetAlert mengikuti Figtree */
+        .swal2-popup {
+            font-family: 'Figtree', sans-serif !important;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-50 min-h-screen relative pb-24 font-sans text-gray-800">
+<body
+    class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col justify-center items-center p-4 relative overflow-hidden">
 
-    <!-- Kontainer Daftar Catatan -->
-    <div class="max-w-2xl mx-auto p-4 pt-8">
-        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">Daftar Catatan</h1>
-
-        <!-- Area List Catatan -->
-        <div id="notesContainer" class="grid grid-cols-1 gap-4">
-            <p id="loadingText" class="text-center text-gray-500 animate-pulse">Memuat catatan dari Firebase...</p>
-        </div>
+    <!-- Header / Tipografi Logo -->
+    <div class="mb-6 text-center">
+        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">blasting.me</h1>
     </div>
 
-    <!-- Tombol WhatsApp Mengambang (Pojok Kanan Bawah) -->
-    <a href="apichat.html"
-        class="fixed bottom-24 right-6 bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full shadow-lg hover:shadow-2xl flex items-center justify-center text-3xl transition-transform transform hover:scale-110 z-40"
-        title="Buka Chat WhatsApp">
-        <i class="fa-brands fa-whatsapp"></i>
-    </a>
+    <!-- Card Container -->
+    <div class="w-full max-w-md px-8 py-8 bg-white border border-gray-100 shadow-sm rounded-2xl">
 
-    <!-- Tombol Fixed di Bawah Layar -->
-    <div
-        class="fixed bottom-0 left-0 w-full p-4 bg-white/80 backdrop-blur-sm border-t border-gray-200 flex justify-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-30">
-        <button id="btnOpenModal"
-            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-200 w-full max-w-sm flex justify-center items-center gap-2">
-            <i class="fas fa-plus"></i> Tambah Catatan
-        </button>
-    </div>
+        <form id="waForm" class="space-y-6">
 
-    <!-- Pop-up / Modal Utama -->
-    <div id="noteModal"
-        class="fixed inset-0 bg-black/60 hidden flex items-center justify-center p-4 z-50 backdrop-blur-sm transition-opacity">
-
-        <!-- Wrapper untuk menyandingkan Modal dan Tombol Vertikal -->
-        <div class="flex flex-row items-stretch gap-3 w-full max-w-lg pointer-events-none">
-
-            <!-- Kotak Konten Modal -->
-            <div class="bg-white rounded-xl w-full p-6 shadow-2xl flex-grow pointer-events-auto flex flex-col">
-                <h2 id="modalTitle" class="text-xl font-bold mb-4 text-gray-800">Catatan Baru</h2>
-
-                <textarea id="noteText" rows="8"
-                    class="w-full flex-grow border border-gray-300 rounded-lg p-4 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-700 bg-gray-50"
-                    placeholder="Ketik catatanmu di sini..."></textarea>
-
-                <!-- Footer khusus untuk Tambah Catatan (Batal / Simpan) -->
-                <div id="addNoteFooter" class="flex justify-end space-x-3">
-                    <button id="btnCancelAdd"
-                        class="px-5 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition">Batal</button>
-                    <button id="btnSaveAdd"
-                        class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow transition">Simpan</button>
-                </div>
+            <!-- Input Pesan -->
+            <div>
+                <label for="message" class="block font-medium text-sm text-gray-700">Pesan Broadcast</label>
+                <textarea id="message" name="message" rows="4" required
+                    placeholder="Tuliskan pesan yang ingin dikirim..."
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring focus:ring-red-500 focus:ring-opacity-50 transition border p-3 outline-none text-sm"></textarea>
             </div>
 
-            <!-- Tombol Aksi Vertikal (Edit, Delete, Save Edit) -->
-            <div id="sideActionButtons" class="hidden flex-col gap-3 pointer-events-auto pt-2">
-                <!-- Group Edit & Delete -->
-                <div id="viewModeButtons" class="flex flex-col gap-3">
-                    <button id="btnEditSide"
-                        class="bg-blue-500 text-white w-12 h-12 rounded-full shadow-lg hover:bg-blue-600 transition flex items-center justify-center text-lg"
-                        title="Edit">
-                        <i class="fas fa-pencil"></i>
-                    </button>
-                    <button id="btnDeleteSide"
-                        class="bg-red-500 text-white w-12 h-12 rounded-full shadow-lg hover:bg-red-600 transition flex items-center justify-center text-lg"
-                        title="Hapus">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                <!-- Tombol Save Edit -->
-                <button id="btnSaveEditSide"
-                    class="hidden bg-green-500 text-white w-12 h-12 rounded-full shadow-lg hover:bg-green-600 transition flex items-center justify-center text-xl"
-                    title="Simpan Perubahan">
-                    <i class="fas fa-save"></i>
+            <!-- Input Nomor Handphone -->
+            <div>
+                <label for="phone" class="block font-medium text-sm text-gray-700">Nomor Target (Massal)</label>
+                <textarea id="phone" name="phone" rows="5" required
+                    placeholder="085754207467&#10;081234567890&#10;(Pisahkan dengan Enter)"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-red-500 focus:ring focus:ring-red-500 focus:ring-opacity-50 transition border p-3 outline-none text-sm font-mono"></textarea>
+                <p class="mt-2 text-xs text-gray-500">Gunakan format angka. Setiap nomor diletakkan di baris baru.</p>
+            </div>
+
+            <!-- Action Button -->
+            <div class="flex items-center justify-end mt-4">
+                <button type="submit" id="submitBtn"
+                    class="inline-flex items-center px-6 py-3 bg-gray-800 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 w-full justify-center">
+                    Kirim Pesan
                 </button>
             </div>
 
-        </div>
+        </form>
     </div>
 
-    <!-- Konfigurasi Firebase Module -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
-        import { getDatabase, ref, get, set, child, remove } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+    <script>
+        document.getElementById('waForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgVPayvFN90iLQWqnK_WFvK6jLYCos4dM",
-            authDomain: "my-project-8c72b.firebaseapp.com",
-            databaseURL: "https://my-project-8c72b-default-rtdb.firebaseio.com",
-            projectId: "my-project-8c72b",
-            storageBucket: "my-project-8c72b.firebasestorage.app",
-            messagingSenderId: "499858126691",
-            appId: "1:499858126691:web:a4137060333433ddbb4556",
-            measurementId: "G-BVJRL5QF8D"
-        };
+            let phoneInput = document.getElementById('phone').value;
+            let message = document.getElementById('message').value;
 
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getDatabase(app);
+            // Pisahkan input berdasarkan baris baru (enter) atau koma, bersihkan spasi depan/belakang
+            let rawNumbers = phoneInput.split(/[\n,]+/).map(num => num.trim()).filter(num => num !== '');
 
-        // Deklarasi Elemen DOM
-        const notesContainer = document.getElementById('notesContainer');
-        const noteModal = document.getElementById('noteModal');
-        const noteText = document.getElementById('noteText');
-        const modalTitle = document.getElementById('modalTitle');
+            // Validasi Input Kosong
+            if (rawNumbers.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Data Kosong',
+                    text: 'Silakan masukkan minimal satu nomor handphone target.',
+                    confirmButtonText: 'Mengerti',
+                    customClass: {
+                        popup: 'rounded-2xl shadow-xl border border-gray-100',
+                        confirmButton: 'w-full mt-4 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg px-6 py-3 transition tracking-widest uppercase text-xs'
+                    },
+                    buttonsStyling: false
+                });
+                return;
+            }
 
-        // Element Tombol
-        const btnOpenModal = document.getElementById('btnOpenModal');
-        const addNoteFooter = document.getElementById('addNoteFooter');
-        const btnCancelAdd = document.getElementById('btnCancelAdd');
-        const btnSaveAdd = document.getElementById('btnSaveAdd');
+            let invalidNumbers = [];
+            let validNumbers = [];
 
-        // Element Aksi Samping
-        const sideActionButtons = document.getElementById('sideActionButtons');
-        const viewModeButtons = document.getElementById('viewModeButtons');
-        const btnEditSide = document.getElementById('btnEditSide');
-        const btnDeleteSide = document.getElementById('btnDeleteSide');
-        const btnSaveEditSide = document.getElementById('btnSaveEditSide');
+            // Pengecekan setiap nomor
+            rawNumbers.forEach(num => {
+                // Hapus spasi di dalam nomor jika user mengetik seperti "0812 3456 7890"
+                let cleanNum = num.replace(/\s+/g, '');
 
-        let nextIndex = 1;
-        let currentActiveKey = null;
-
-        // ==========================================
-        // FUNGSI MENGAMBIL DAN MENAMPILKAN DATA
-        // ==========================================
-        async function fetchNotes() {
-            try {
-                const dbRef = ref(db);
-                const snapshot = await get(child(dbRef, 'notepad'));
-                notesContainer.innerHTML = '';
-
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    let maxNum = 0;
-
-                    for (const key in data) {
-                        if (key.startsWith('note')) {
-                            const num = parseInt(key.replace('note', ''));
-                            if (!isNaN(num) && num > maxNum) maxNum = num;
-
-                            const textValue = data[key].text || '';
-
-                            const noteCard = document.createElement('div');
-                            noteCard.className = 'bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md cursor-pointer transition';
-                            noteCard.innerHTML = `
-                                <div class="text-xs text-blue-500 font-semibold mb-2 uppercase tracking-wide">#${key}</div>
-                                <p class="text-gray-700 whitespace-pre-wrap line-clamp-3">${textValue}</p>
-                            `;
-
-                            noteCard.addEventListener('click', () => {
-                                openViewMode(key, textValue);
-                            });
-
-                            notesContainer.appendChild(noteCard);
-                        }
-                    }
-                    nextIndex = maxNum + 1;
-                } else {
-                    notesContainer.innerHTML = '<p class="text-gray-500 text-center">Belum ada catatan.</p>';
-                    nextIndex = 1;
+                // Cek apakah ada karakter selain angka (huruf, simbol, dll)
+                if (!/^[0-9]+$/.test(cleanNum)) {
+                    invalidNumbers.push(`<b>${cleanNum}</b> <span class="text-xs ml-1">(Bukan angka)</span>`);
                 }
-            } catch (error) {
-                console.error(error);
-                notesContainer.innerHTML = '<p class="text-red-500 text-center">Gagal memuat catatan.</p>';
-            }
-        }
-
-        // ==========================================
-        // MANAJEMEN MODAL DAN STATE
-        // ==========================================
-
-        function closeModal() {
-            noteModal.classList.add('hidden');
-            noteText.value = '';
-            currentActiveKey = null;
-        }
-
-        function openAddMode() {
-            modalTitle.innerText = "Catatan Baru";
-            noteText.value = '';
-            noteText.readOnly = false;
-            noteText.classList.remove('bg-gray-100', 'cursor-not-allowed');
-
-            addNoteFooter.classList.remove('hidden');
-            sideActionButtons.classList.add('hidden');
-
-            noteModal.classList.remove('hidden');
-            noteText.focus();
-        }
-
-        function openViewMode(key, text) {
-            currentActiveKey = key;
-            modalTitle.innerText = "Lihat Catatan";
-            noteText.value = text;
-            noteText.readOnly = true;
-            noteText.classList.add('bg-gray-100', 'cursor-not-allowed');
-
-            addNoteFooter.classList.add('hidden');
-            sideActionButtons.classList.remove('hidden');
-            sideActionButtons.classList.add('flex');
-
-            viewModeButtons.classList.remove('hidden');
-            btnSaveEditSide.classList.add('hidden');
-
-            noteModal.classList.remove('hidden');
-        }
-
-        function enableEditMode() {
-            modalTitle.innerText = "Edit Catatan";
-            noteText.readOnly = false;
-            noteText.classList.remove('bg-gray-100', 'cursor-not-allowed');
-
-            viewModeButtons.classList.add('hidden');
-            btnSaveEditSide.classList.remove('hidden');
-
-            noteText.focus();
-        }
-
-        // ==========================================
-        // EVENT LISTENERS
-        // ==========================================
-
-        noteModal.addEventListener('click', (e) => {
-            if (e.target === noteModal) {
-                closeModal();
-            }
-        });
-
-        btnOpenModal.addEventListener('click', openAddMode);
-        btnCancelAdd.addEventListener('click', closeModal);
-
-        btnSaveAdd.addEventListener('click', async () => {
-            const content = noteText.value.trim();
-            if (!content) return alert('Catatan kosong!');
-
-            btnSaveAdd.innerText = 'Menyimpan...';
-            try {
-                const newNoteKey = 'note' + nextIndex;
-                await set(ref(db, 'notepad/' + newNoteKey), { text: content });
-                closeModal();
-                fetchNotes();
-            } catch (error) {
-                alert('Gagal menyimpan catatan.');
-            } finally {
-                btnSaveAdd.innerText = 'Simpan';
-            }
-        });
-
-        btnEditSide.addEventListener('click', enableEditMode);
-
-        btnSaveEditSide.addEventListener('click', async () => {
-            const content = noteText.value.trim();
-            if (!content) return alert('Catatan tidak boleh kosong!');
-
-            btnSaveEditSide.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            try {
-                await set(ref(db, 'notepad/' + currentActiveKey), { text: content });
-                closeModal();
-                fetchNotes();
-            } catch (error) {
-                alert('Gagal memperbarui catatan.');
-            } finally {
-                btnSaveEditSide.innerHTML = '<i class="fas fa-save"></i>';
-            }
-        });
-
-        btnDeleteSide.addEventListener('click', async () => {
-            if (confirm("Yakin ingin menghapus catatan ini?")) {
-                try {
-                    await remove(ref(db, 'notepad/' + currentActiveKey));
-                    closeModal();
-                    fetchNotes();
-                } catch (error) {
-                    alert('Gagal menghapus catatan.');
+                // Cek panjang minimal 11 digit
+                else if (cleanNum.length < 11) {
+                    invalidNumbers.push(`<b>${cleanNum}</b> <span class="text-xs ml-1">(Kurang dari 11 digit)</span>`);
                 }
-            }
-        });
+                // Jika lolos validasi, masukkan ke daftar aman
+                else {
+                    validNumbers.push(cleanNum);
+                }
+            });
 
-        // Init
-        fetchNotes();
+            // Jika ada Eror pada nomor yang dimasukkan (Pop-up Laravel 12 Style)
+            if (invalidNumbers.length > 0) {
+                // Format list HTML untuk menampilkan eror spesifik
+                let errorListHtml = invalidNumbers.map(err =>
+                    `<li class="text-left text-sm text-red-700 bg-red-50 p-2.5 rounded-lg border border-red-100 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <span>${err}</span>
+                    </li>`
+                ).join('');
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Format Tidak Valid',
+                    html: `
+                        <div class="mt-2 text-sm text-gray-600 mb-4 text-left">
+                            Terdapat nomor yang tidak sesuai ketentuan (harus murni angka & minimal 11 digit):
+                        </div>
+                        <ul class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+                            ${errorListHtml}
+                        </ul>
+                        <div class="mt-4 text-xs text-gray-500 text-left border-t pt-3 border-gray-100">
+                            Silakan perbaiki kolom isian sebelum melanjutkan pengiriman.
+                        </div>
+                    `,
+                    confirmButtonText: 'Perbaiki',
+                    customClass: {
+                        popup: 'rounded-2xl shadow-xl border border-gray-100 p-6',
+                        title: 'text-gray-900 font-bold text-xl',
+                        confirmButton: 'w-full mt-4 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg px-6 py-3 transition tracking-widest uppercase text-xs'
+                    },
+                    buttonsStyling: false
+                });
+
+                return; // Berhenti di sini, jangan jalankan proses pembukaan WhatsApp
+            }
+
+            // ==========================================
+            // PROSES PENGIRIMAN (JIKA SEMUA VALID)
+            // ==========================================
+
+            // Ambil nomor urutan pertama dari array yang sudah valid
+            let currentNumber = validNumbers.shift();
+
+            // Kembalikan sisa antrean ke textarea
+            document.getElementById('phone').value = validNumbers.join('\n');
+
+            // Ubah gaya tombol ala Laravel jika masih ada antrean
+            const submitBtn = document.getElementById('submitBtn');
+            if (validNumbers.length > 0) {
+                submitBtn.innerText = `Kirim Berikutnya (${validNumbers.length} Antrean)`;
+                // Ubah ke warna Amber (Warning)
+                submitBtn.classList.replace('bg-gray-800', 'bg-amber-600');
+                submitBtn.classList.replace('hover:bg-gray-700', 'hover:bg-amber-500');
+                submitBtn.classList.replace('active:bg-gray-900', 'active:bg-amber-700');
+            } else {
+                submitBtn.innerText = 'Kirim Pesan';
+                // Kembali ke warna dasar hitam Laravel
+                submitBtn.classList.replace('bg-amber-600', 'bg-gray-800');
+                submitBtn.classList.replace('hover:bg-amber-500', 'hover:bg-gray-700');
+                submitBtn.classList.replace('active:bg-amber-700', 'active:bg-gray-900');
+            }
+
+            // Penyesuaian format nomor ID ke kode negara
+            if (currentNumber.startsWith('0')) {
+                currentNumber = '62' + currentNumber.substring(1);
+            }
+
+            // Buka API WhatsApp
+            let encodedMessage = encodeURIComponent(message);
+            let waUrl = `https://wa.me/${currentNumber}?text=${encodedMessage}`;
+            window.open(waUrl, '_blank');
+        });
     </script>
+
 </body>
 
 </html>
